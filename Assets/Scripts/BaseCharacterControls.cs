@@ -23,17 +23,33 @@ public class BaseCharacterControls : MonoBehaviour {
   
   float verticalViewingAngle = 0;
 
+    Animator anim; 
+
   void Start() {
     Cursor.lockState = CursorLockMode.Locked;
 
   }
 
+    private void Awake() {
+        anim = GetComponentInChildren<Animator>();
+    }
 
-  void Update() {
+
+    private void FixedUpdate() {
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) {
+            anim.SetBool("isWalk", true);
+        } else {
+            anim.SetBool("isWalk", false);
+        }
+    }
+    void Update() {
     CameraControls();
+
+       
 
     // Implementing (infinite) jumps, when pressing the Space bar
     if (Input.GetKeyDown(KeyCode.Space)) {
+
       float yVel = kinematicBody.currentVelocity.y;
 
       //If already moving up, add jump to current velocity (yVel + jumpSpeed). If falling down, add the jump as if the player is stationary (0 + jumpSpeed).
@@ -44,6 +60,7 @@ public class BaseCharacterControls : MonoBehaviour {
     }
 
     PlayerMovementUpdate();
+       
   }
 
 
