@@ -42,15 +42,16 @@ public class BaseCharacterControls : MonoBehaviour {
             anim.SetBool("isWalk", false);
         }
     }
+
+  
     void Update() {
     CameraControls();
-
-       
-
     // Implementing (infinite) jumps, when pressing the Space bar
     if (Input.GetKeyDown(KeyCode.Space)) {
+            anim.SetBool("isJump", true);
+            anim.SetTrigger("doJump");
 
-      float yVel = kinematicBody.currentVelocity.y;
+            float yVel = kinematicBody.currentVelocity.y;
 
       //If already moving up, add jump to current velocity (yVel + jumpSpeed). If falling down, add the jump as if the player is stationary (0 + jumpSpeed).
       yVel = Mathf.Max(yVel + jumpSpeed, 0 + jumpSpeed);
@@ -58,8 +59,9 @@ public class BaseCharacterControls : MonoBehaviour {
       //Apply new velocity to the KinematicBody (it's a custom script).
       kinematicBody.currentVelocity = new Vector3(kinematicBody.currentVelocity.x, yVel, kinematicBody.currentVelocity.z);
     }
+       
 
-    PlayerMovementUpdate();
+        PlayerMovementUpdate();
        
   }
 
@@ -123,9 +125,10 @@ public class BaseCharacterControls : MonoBehaviour {
   }
 
   bool IsGrounded() {
-    //If I'm touching the ground AND haven't started to ascend.
-    //I want to be considered airborne the frame I'm jumping, so the jump is consistent
-    return characterController.isGrounded == true && kinematicBody.currentVelocity.y <= 0f;
+        anim.SetBool("isJump", false);
+        //If I'm touching the ground AND haven't started to ascend.
+        //I want to be considered airborne the frame I'm jumping, so the jump is consistent
+        return characterController.isGrounded == true && kinematicBody.currentVelocity.y <= 0f;
   }
 
 }
